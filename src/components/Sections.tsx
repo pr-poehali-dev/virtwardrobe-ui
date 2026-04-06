@@ -251,12 +251,21 @@ export function OutfitSection({ outfits, items, toggleFavoriteOutfit }: OutfitSe
 }
 
 interface AddSectionProps {
-  addForm: { name: string; category: string; color: string; tags: string };
-  setAddForm: (form: { name: string; category: string; color: string; tags: string }) => void;
+  addForm: { name: string; category: string; color: string; tags: string; _previewUrl: string };
+  setAddForm: (form: { name: string; category: string; color: string; tags: string; _previewUrl: string }) => void;
   onSubmit: () => void;
 }
 
 export function AddSection({ addForm, setAddForm, onSubmit }: AddSectionProps) {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    setAddForm({ ...addForm, _previewUrl: url });
+  };
+
+  const previewUrl = addForm._previewUrl;
+
   return (
     <div className="max-w-2xl mx-auto px-6 py-12">
       <div className="mb-10">
@@ -265,11 +274,18 @@ export function AddSection({ addForm, setAddForm, onSubmit }: AddSectionProps) {
       </div>
 
       <div className="animate-fade-up space-y-6">
-        <div className="border border-dashed border-border aspect-[4/3] flex flex-col items-center justify-center cursor-pointer hover:bg-secondary/30 transition-colors group">
-          <Icon name="Upload" size={28} className="text-muted-foreground mb-3 opacity-40 group-hover:opacity-100 transition-opacity" />
-          <p className="font-body text-sm text-muted-foreground">Загрузить фото</p>
-          <p className="font-body text-xs text-muted-foreground/50 mt-1">JPG, PNG до 10 МБ</p>
-        </div>
+        <label className="block border border-dashed border-border aspect-[4/3] flex flex-col items-center justify-center cursor-pointer hover:bg-secondary/30 transition-colors group overflow-hidden relative">
+          <input type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+          {previewUrl ? (
+            <img src={previewUrl} alt="preview" className="absolute inset-0 w-full h-full object-cover" />
+          ) : (
+            <>
+              <Icon name="Upload" size={28} className="text-muted-foreground mb-3 opacity-40 group-hover:opacity-100 transition-opacity" />
+              <p className="font-body text-sm text-muted-foreground">Загрузить фото</p>
+              <p className="font-body text-xs text-muted-foreground/50 mt-1">JPG, PNG до 10 МБ</p>
+            </>
+          )}
+        </label>
 
         <div className="space-y-4">
           <div>

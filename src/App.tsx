@@ -17,7 +17,7 @@ export default function App() {
   const [outfits, setOutfits] = useState<Outfit[]>(INITIAL_OUTFITS);
   const [activeCategory, setActiveCategory] = useState("Все");
   const [randomOutfit, setRandomOutfit] = useState<ClothingItem[] | null>(null);
-  const [addForm, setAddForm] = useState({ name: "", category: "Верх", color: "", tags: "" });
+  const [addForm, setAddForm] = useState({ name: "", category: "Верх", color: "", tags: "", _previewUrl: "" });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const toggleFavoriteItem = (id: number) => {
@@ -59,12 +59,12 @@ export default function App() {
       name: addForm.name,
       category: addForm.category,
       color: addForm.color || "—",
-      image: "https://cdn.poehali.dev/projects/93dae55f-eb20-4d91-bef8-4fa20bf2a132/files/b859e0a6-642e-4ebc-9fd5-96db1d403e3a.jpg",
+      image: addForm._previewUrl || "https://cdn.poehali.dev/projects/93dae55f-eb20-4d91-bef8-4fa20bf2a132/files/b859e0a6-642e-4ebc-9fd5-96db1d403e3a.jpg",
       favorite: false,
       tags: addForm.tags.split(",").map((t) => t.trim()).filter(Boolean),
     };
     setItems((prev) => [...prev, newItem]);
-    setAddForm({ name: "", category: "Верх", color: "", tags: "" });
+    setAddForm({ name: "", category: "Верх", color: "", tags: "", _previewUrl: "" });
     navigate("wardrobe");
   };
 
